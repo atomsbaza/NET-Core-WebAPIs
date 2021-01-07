@@ -1,3 +1,4 @@
+using Confluent.Kafka;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using True_Test_WebAPIs.Consumer;
 
 namespace True_Test_WebAPIs
 {
@@ -26,7 +28,13 @@ namespace True_Test_WebAPIs
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            //services.AddHostedService<>();
+            services.AddHostedService<WorkerConsumer>();
+            services.AddSingleton<ConsumerConfig>(option =>
+            {
+                ConsumerConfig config = new ConsumerConfig();
+                config.BootstrapServers = Configuration.GetValue<string>("KafkaConsumer:BootstrapServers");
+                return config;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
