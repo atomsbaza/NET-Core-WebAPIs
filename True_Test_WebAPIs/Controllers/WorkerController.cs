@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using True_Test_WebAPIs.Models;
 using True_Test_WebAPIs.Services;
+using True_Test_WebAPIs.Services.Producer.Interface;
+
 
 namespace True_Test_WebAPIs.Controllers
 {
@@ -13,66 +16,39 @@ namespace True_Test_WebAPIs.Controllers
     [Route("api/[controller]")]
     public class WorkerController : ControllerBase
     {
-        private readonly WokerService _workerService;
+        private readonly WorkerService _workerService;
+        private readonly IKafkaProducerService _producerService;
+        private const string _topic = "Woker";
 
-        public WorkerController(WokerService workerService)
+        public WorkerController(WorkerService workerService, IKafkaProducerService producerService)
         {
             _workerService = workerService;
+            _producerService = producerService;
         }
 
         [HttpGet]
         public ActionResult<List<Worker>> Get() => _workerService.Get();
 
-        [HttpGet("{Msg_id}", Name = "GetWorker")]
-        public ActionResult<Worker> Get(string id)
-        {
-            var worker = _workerService.Get(id);
-
-            if (worker == null)
-            {
-                return NotFound();
-            }
-
-            return worker;
-        }
-
         [HttpPost]
-        public ActionResult<Worker> Create(Worker worker)
+        public async Task<IActionResult> Create(string topic, Worker worker)
         {
+            topic = _topic;
+            if (string.IsNullOrEmpty(topic) || worker == null)
+            {
+                return BadRequest();
+            }
+
             worker.Received_Time = DateTime.Now;
-            _workerService.Create(worker);
 
-            return CreatedAtRoute("GetWorker", new { Msg_id = worker.Msg_id.ToString() }, worker);
-        }
+            string serializedUser = JsonConvert.SerializeObject(worker);
+            await this._producerService.ProduceAsync(topic, serializedUser);
 
-        [HttpPut("{Msg_id}")]
-        public IActionResult Update(string Msg_id, Worker workerIn)
-        {
-            var worker = _workerService.Get(Msg_id);
+            // Return Response
+            var returnResult = new ResponseResult();
+            returnResult.Code = "OK";
+            returnResult.Received_Time = worker.Received_Time.ToString();
 
-            if (worker == null)
-            {
-                return NotFound();
-            }
-
-            _workerService.Update(Msg_id, workerIn);
-
-            return NoContent();
-        }
-
-        [HttpDelete("{Msg_id}")]
-        public IActionResult Delete(string Msg_id)
-        {
-            var worker = _workerService.Get(Msg_id);
-
-            if (worker == null)
-            {
-                return NotFound();
-            }
-
-            _workerService.Remove(worker);
-
-            return NoContent();
+            return Ok(returnResult);
         }
     }
 }

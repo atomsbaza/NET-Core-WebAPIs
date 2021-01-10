@@ -12,9 +12,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using True_Test_WebAPIs.Consumer;
 using True_Test_WebAPIs.Models;
 using True_Test_WebAPIs.Services;
+using True_Test_WebAPIs.Services.Producer;
+using True_Test_WebAPIs.Services.Producer.Interface;
 
 namespace True_Test_WebAPIs
 {
@@ -35,18 +36,15 @@ namespace True_Test_WebAPIs
             services.AddSingleton<IWorkerDatabaseSettings>(sp =>sp.GetRequiredService<IOptions<WorkerDatabaseSettings>>().Value);
 
             // Setup Service
-            services.AddSingleton<WokerService>();
+            services.AddSingleton<WorkerService>();
 
-            services.AddMemoryCache();
+            // Setup Kafka Producer
+            var producerConfig = new ProducerConfig();
+            Configuration.Bind("KafkaProducer", producerConfig);
+            services.AddSingleton(producerConfig);
+            services.AddScoped<IKafkaProducerService, KafkaProducerService>();
+
             services.AddControllers();
-
-            //services.AddHostedService<WorkerConsumer>();
-            //services.AddSingleton<ConsumerConfig>(option =>
-            //{
-            //    ConsumerConfig config = new ConsumerConfig();
-            //    config.BootstrapServers = Configuration.GetValue<string>("KafkaConsumer:BootstrapServers");
-            //    return config;
-            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
