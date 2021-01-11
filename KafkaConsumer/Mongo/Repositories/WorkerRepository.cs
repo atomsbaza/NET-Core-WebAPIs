@@ -27,8 +27,16 @@ namespace KafkaConsumer.Mongo.Repositories
 
         public string GetSequenceValue()
         {
-            var checkId = context.Workers.Find(f => f.Msg_id != "0").SortByDescending(g => g.Msg_id).FirstOrDefault().Msg_id;
-            var nextId = (Convert.ToInt32(checkId) + 1).ToString();
+            var nextId = "";
+            var checkId = context.Workers.Find(f => f.Msg_id != "0").SortByDescending(g => g.Msg_id).FirstOrDefault();
+            if (checkId == null)
+            {
+                nextId = "1";
+            }
+            else
+            {
+                nextId = (Convert.ToInt32(checkId.Msg_id) + 1).ToString();
+            }
 
             return nextId;
         }
