@@ -28,7 +28,8 @@ namespace KafkaConsumer
                   var consumerConfig = new ConsumerConfig();
                   config.Bind("KafkaConsumer", consumerConfig);
                   services.AddSingleton(consumerConfig);
-
+                  var a = config.GetSection("WorkerDatabaseSettings:ConnectionString").Value;
+                  var b = config.GetSection("WorkerDatabaseSettings:DatabaseName").Value;
                   services.Configure<MongoSettings>(options =>
                   {
                       options.ConnectionString = config.GetSection("WorkerDatabaseSettings:ConnectionString").Value;

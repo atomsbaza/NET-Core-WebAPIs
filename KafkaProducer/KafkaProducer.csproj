@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>True_Test_WebAPIs</AssemblyName>
-    <RootNamespace>True_Test_WebAPIs</RootNamespace>
+    <AssemblyName>KafkaProducer</AssemblyName>
+    <RootNamespace>KafkaProducer</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

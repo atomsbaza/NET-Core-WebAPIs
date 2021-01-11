@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using True_Test_WebAPIs.Models;
+using KafkaProducer.Models;
 
-namespace True_Test_WebAPIs.Services
+namespace KafkaProducer.Services
 {
     public class WorkerService
     {
@@ -22,11 +22,5 @@ namespace True_Test_WebAPIs.Services
 
         // Get Worker in DB
         public List<Worker> Get() => _woker.Find(r => true).ToList();
-
-        // Create Worker into DB
-        public async Task Create(Worker worker)
-        {
-            await _woker.InsertOneAsync(worker); 
-        }
     }
 }

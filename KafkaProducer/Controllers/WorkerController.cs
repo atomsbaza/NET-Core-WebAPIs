@@ -5,12 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using True_Test_WebAPIs.Models;
-using True_Test_WebAPIs.Services;
-using True_Test_WebAPIs.Services.Producer.Interface;
+using KafkaProducer.Models;
+using KafkaProducer.Services;
+using KafkaProducer.Services.Producer.Interface;
 
 
-namespace True_Test_WebAPIs.Controllers
+namespace KafkaProducer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -18,7 +18,7 @@ namespace True_Test_WebAPIs.Controllers
     {
         private readonly WorkerService _workerService;
         private readonly IKafkaProducerService _producerService;
-        private const string _topic = "Woker";
+        private const string _topic = "Worker";
 
         public WorkerController(WorkerService workerService, IKafkaProducerService producerService)
         {

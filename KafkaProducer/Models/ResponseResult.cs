@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace True_Test_WebAPIs.Models
+namespace KafkaProducer.Models
 {
     public class ResponseResult
     {

@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using True_Test_WebAPIs.Services.Producer.Interface;
+using KafkaProducer.Services.Producer.Interface;
 
-namespace True_Test_WebAPIs.Services.Producer
+namespace KafkaProducer.Services.Producer
 {
     public class KafkaProducerService : IKafkaProducerService
     {

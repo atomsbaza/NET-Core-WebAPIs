@@ -27,7 +27,7 @@ namespace KafkaConsumer.Services.KafkaServices
         {
             using (var consumer = new ConsumerBuilder<Null, string>(this._config).Build())
             {
-                consumer.Subscribe("Woker");
+                consumer.Subscribe("Worker");
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     var consumedResult = consumer.Consume(cancellationToken);
