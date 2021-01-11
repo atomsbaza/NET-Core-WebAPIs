@@ -20,23 +20,24 @@ namespace KafkaConsumer.Mongo.Repositories
         }
         public async Task AddUser(Worker worker)
         {
-            var nextId = GetSequenceValue();
-            worker.Msg_id = nextId;
-            await context.Workers.InsertOneAsync(worker);
+            try
+            {
+                var nextId = GetSequenceValue();
+                worker.Msg_id = nextId;
+                await context.Workers.InsertOneAsync(worker);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public string GetSequenceValue()
         {
             var nextId = "";
             var checkId = context.Workers.Find(f => f.Msg_id != "0").SortByDescending(g => g.Msg_id).FirstOrDefault();
-            if (checkId == null)
-            {
-                nextId = "1";
-            }
-            else
-            {
-                nextId = (Convert.ToInt32(checkId.Msg_id) + 1).ToString();
-            }
+            nextId = checkId == null ? "1" : (Convert.ToInt32(checkId.Msg_id) + 1).ToString();
 
             return nextId;
         }

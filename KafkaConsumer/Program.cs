@@ -25,17 +25,19 @@ namespace KafkaConsumer
               {
                   IConfiguration config = hostContext.Configuration;
 
+                  // Setup Kafka Consumer Config
                   var consumerConfig = new ConsumerConfig();
                   config.Bind("KafkaConsumer", consumerConfig);
                   services.AddSingleton(consumerConfig);
-                  var a = config.GetSection("WorkerDatabaseSettings:ConnectionString").Value;
-                  var b = config.GetSection("WorkerDatabaseSettings:DatabaseName").Value;
+
+                  // Setup MongoDB Config
                   services.Configure<MongoSettings>(options =>
                   {
                       options.ConnectionString = config.GetSection("WorkerDatabaseSettings:ConnectionString").Value;
                       options.Database = config.GetSection("WorkerDatabaseSettings:DatabaseName").Value;
                   });
 
+                  // Setup Service
                   services.AddSingleton<IWorkerRepository, WorkerRepository>();
                   services.AddSingleton<IKafkaConsumerService, KafkaConsumerService>();
                   services.AddSingleton<IWorkerService, WorkerService>();

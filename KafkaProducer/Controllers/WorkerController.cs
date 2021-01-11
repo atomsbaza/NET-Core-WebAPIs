@@ -32,23 +32,33 @@ namespace KafkaProducer.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(string topic, Worker worker)
         {
-            topic = _topic;
-            if (string.IsNullOrEmpty(topic) || worker == null)
+            try
             {
-                return BadRequest();
+                topic = _topic;
+                if (string.IsNullOrEmpty(topic) || worker == null)
+                {
+                    return BadRequest();
+                }
+
+                worker.Received_Time = DateTime.Now;
+
+                string serializedUser = JsonConvert.SerializeObject(worker);
+                await this._producerService.ProduceAsync(topic, serializedUser);
+
+                // Return Response
+                var returnResult = new ResponseResult
+                {
+                    Code = "OK",
+                    Received_Time = worker.Received_Time.ToString()
+                };
+
+                return Ok(returnResult);
             }
-
-            worker.Received_Time = DateTime.Now;
-
-            string serializedUser = JsonConvert.SerializeObject(worker);
-            await this._producerService.ProduceAsync(topic, serializedUser);
-
-            // Return Response
-            var returnResult = new ResponseResult();
-            returnResult.Code = "OK";
-            returnResult.Received_Time = worker.Received_Time.ToString();
-
-            return Ok(returnResult);
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+            
         }
     }
 }

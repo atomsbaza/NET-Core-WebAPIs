@@ -38,7 +38,7 @@ namespace KafkaProducer
             // Setup Service
             services.AddSingleton<WorkerService>();
 
-            // Setup Kafka Producer
+            // Setup Kafka Producer Config
             var producerConfig = new ProducerConfig();
             Configuration.Bind("KafkaProducer", producerConfig);
             services.AddSingleton(producerConfig);
