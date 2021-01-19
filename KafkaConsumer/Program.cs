@@ -28,6 +28,10 @@ namespace KafkaConsumer
                   // Setup Kafka Consumer Config
                   var consumerConfig = new ConsumerConfig();
                   config.Bind("KafkaConsumer", consumerConfig);
+
+                  // AddSingleton นั่น object จะถูกสร้างขึ้นมาแค่ครั้งเดียว ไม่ว่าเราจะ request เข้ามากี่รอบ object จะไม่ถูกสร้างใหม่แล้ว
+                  // AddTransient นั่น object จะถูก create instance ใหม่ตลอด
+                  // AddScoped นั้นใน request ใดๆ ที่เข้ามา ถ้า object ถูก create ไว้แล้ว จะไม่สร้างใหม่อีก
                   services.AddSingleton(consumerConfig);
 
                   // Setup MongoDB Config

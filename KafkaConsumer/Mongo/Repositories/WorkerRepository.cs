@@ -33,11 +33,11 @@ namespace KafkaConsumer.Mongo.Repositories
             }
         }
 
-        public string GetSequenceValue()
+        public int GetSequenceValue()
         {
-            var nextId = "";
-            var checkId = context.Workers.Find(f => f.Msg_id != "0").SortByDescending(g => g.Msg_id).FirstOrDefault();
-            nextId = checkId == null ? "1" : (Convert.ToInt32(checkId.Msg_id) + 1).ToString();
+            var nextId = 0;
+            var checkId = context.Workers.Find(Builders<Worker>.Filter.Empty).SortByDescending(g => g.Msg_id).FirstOrDefault();
+            nextId = checkId == null ? 1 : checkId.Msg_id + 1;
 
             return nextId;
         }

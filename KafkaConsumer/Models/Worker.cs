@@ -8,7 +8,7 @@ namespace KafkaConsumer.Models
     public class Worker
     {
         [BsonId]
-        public string Msg_id { get; set; }
+        public int Msg_id { get; set; }
 
         [BsonElement("Name")]
         public string Sender { get; set; }
